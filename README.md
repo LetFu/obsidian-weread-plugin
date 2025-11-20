@@ -25,6 +25,7 @@ https://github.com/zhaohongxuan/obsidian-weread-plugin/releases
 - 公众号划线和笔记归类同步
 - 支持移动端同步，可以在手机和平板上使用本插件
 - 支持Daily Notes,将当日读书笔记同步至Daily Notes中，已经在[0.4.0](https://github.com/zhaohongxuan/obsidian-weread-plugin/releases/tag/0.4.0)中支持
+- 支持保留多层级章节结构，可选择是否显示父章节层级（即使父章节没有划线）
 - 同步热门划线到笔记中（TBD）
 
 ## 安装方法
