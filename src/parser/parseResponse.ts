@@ -174,8 +174,7 @@ export const parseChapterHighlightReview = (
 
 		if (
 			(chapterHighlights && chapterHighlights.length > 0) ||
-			(chapterReviewsForChapter && chapterReviewsForChapter.length > 0) ||
-			showEmptyChapterTitleToggle
+			(chapterReviewsForChapter && chapterReviewsForChapter.length > 0)
 		) {
 			chaptersWithContent.add(chapterUid);
 		}
@@ -187,16 +186,15 @@ export const parseChapterHighlightReview = (
 		for (let i = 0; i < chapters.length; i++) {
 			const chapter = chapters[i];
 			if (chaptersWithContent.has(chapter.chapterUid)) {
-				// Find and include all parent chapters
+				// Find and include all parent chapters by traversing backwards
+				let currentLevel = chapter.level;
 				for (let j = i - 1; j >= 0; j--) {
 					const potentialParent = chapters[j];
-					// A parent chapter has a lower level number
-					if (potentialParent.level < chapter.level) {
+					// A parent chapter has a level less than currentLevel
+					if (potentialParent.level < currentLevel) {
 						chaptersToInclude.add(potentialParent.chapterUid);
-						// Continue to find grandparents
-					} else if (potentialParent.level >= chapter.level) {
-						// Stop when we reach a sibling or child chapter
-						break;
+						// Update currentLevel to continue finding higher-level parents
+						currentLevel = potentialParent.level;
 					}
 				}
 			}
