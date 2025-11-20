@@ -24,6 +24,7 @@ interface WereadPluginSettings {
 	dailyNotesToggle: boolean;
 	notesBlacklist: string;
 	showEmptyChapterTitleToggle: boolean;
+	showParentChapterToggle: boolean;
 	convertTags: boolean;
 	saveArticleToggle: boolean;
 	saveReadingInfoToggle: boolean;
@@ -55,6 +56,7 @@ const DEFAULT_SETTINGS: WereadPluginSettings = {
 	dailyNotesToggle: false,
 	notesBlacklist: '',
 	showEmptyChapterTitleToggle: false,
+	showParentChapterToggle: true,
 	convertTags: false,
 	saveArticleToggle: true,
 	saveReadingInfoToggle: true,
@@ -244,6 +246,13 @@ const createSettingsStore = () => {
 		});
 	};
 
+	const setParentChapterToggle = (parentChapterToggle: boolean) => {
+		store.update((state) => {
+			state.showParentChapterToggle = parentChapterToggle;
+			return state;
+		});
+	};
+
 	const setConvertTags = (convertTags: boolean) => {
 		store.update((state) => {
 			state.convertTags = convertTags;
@@ -293,6 +302,7 @@ const createSettingsStore = () => {
 			setInsertBefore,
 			setNoteBlacklist,
 			setEmptyChapterTitleToggle,
+			setParentChapterToggle,
 			setConvertTags,
 			setSaveArticleToggle,
 			setSaveReadingInfoToggle,
