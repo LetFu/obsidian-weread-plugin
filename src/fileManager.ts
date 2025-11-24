@@ -240,7 +240,7 @@ export default class FileManager {
 			if (metaData.category) {
 				return metaData.category.split('-')[0];
 			} else {
-				return metaData.author === '公众号' ? '公众号' : '未分类';
+				return metaData.author === '公众号' ? metaData.title : '未分类';
 			}
 		}
 		return '';
