@@ -60,6 +60,7 @@ export class WereadSettingsTab extends PluginSettingTab {
 		this.saveArticleToggle();
 		this.saveReadingInfoToggle();
 		this.showEmptyChapterTitleToggle();
+		this.showParentChapterToggle();
 		this.dailyNotes();
 		const dailyNotesToggle = get(settingsStore).dailyNotesToggle;
 		if (dailyNotesToggle) {
@@ -407,6 +408,22 @@ export class WereadSettingsTab extends PluginSettingTab {
 					.onChange((value) => {
 						console.debug('set empty chapter title toggle to', value);
 						settingsStore.actions.setEmptyChapterTitleToggle(value);
+						this.display();
+					});
+			});
+	}
+
+	private showParentChapterToggle(): void {
+		new Setting(this.containerEl)
+			.setName('生成父章节层级？')
+			.setDesc('如果启用，则会显示包含划线的子章节的父章节标题，即使父章节本身没有划线')
+			.setHeading()
+			.addToggle((toggle) => {
+				return toggle
+					.setValue(get(settingsStore).showParentChapterToggle)
+					.onChange((value) => {
+						console.debug('set parent chapter toggle to', value);
+						settingsStore.actions.setParentChapterToggle(value);
 						this.display();
 					});
 			});

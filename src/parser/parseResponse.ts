@@ -158,42 +158,85 @@ export const parseChapterHighlightReview = (
 	reviews?: Review[]
 ): ChapterHighlightReview[] => {
 	const chapterResult: ChapterHighlightReview[] = [];
+	const showEmptyChapterTitleToggle = get(settingsStore).showEmptyChapterTitleToggle;
+	const showParentChapterToggle = get(settingsStore).showParentChapterToggle;
 
+	// First pass: identify chapters with content (highlights or reviews)
+	const chaptersWithContent = new Set<number>();
+	for (const chapter of chapters) {
+		const chapterUid = chapter.chapterUid;
+		const chapterHighlights = highlights.filter(
+			(highlight) => highlight.chapterUid == chapterUid
+		);
+		const chapterReviewsForChapter = reviews?.filter(
+			(review) => chapterUid == review.chapterUid && review.type == 1
+		);
+
+		if (
+			(chapterHighlights && chapterHighlights.length > 0) ||
+			(chapterReviewsForChapter && chapterReviewsForChapter.length > 0)
+		) {
+			chaptersWithContent.add(chapterUid);
+		}
+	}
+
+	// Second pass: if showParentChapterToggle is enabled, add parent chapters
+	const chaptersToInclude = new Set<number>(chaptersWithContent);
+	if (showParentChapterToggle) {
+		for (let i = 0; i < chapters.length; i++) {
+			const chapter = chapters[i];
+			if (chaptersWithContent.has(chapter.chapterUid)) {
+				// Find and include all parent chapters by traversing backwards
+				let currentLevel = chapter.level;
+				for (let j = i - 1; j >= 0; j--) {
+					const potentialParent = chapters[j];
+					// A parent chapter has a level less than currentLevel
+					if (potentialParent.level < currentLevel) {
+						chaptersToInclude.add(potentialParent.chapterUid);
+						// Update currentLevel to continue finding higher-level parents
+						currentLevel = potentialParent.level;
+					}
+				}
+			}
+		}
+	}
+
+	// Third pass: build the result with chapters to include
 	for (const chapter of chapters) {
 		const chapterUid = chapter.chapterUid;
 		const chapterIdx = chapter.chapterIdx;
 		const chapterTitle = chapter.title;
 
-		// find highlights by chapterUid
-		const chapterHighlights = highlights
-			.filter((highlight) => highlight.chapterUid == chapterUid)
-			.sort((o1, o2) => {
-				const o1Start = parseInt(o1.range.split('-')[0]);
-				const o2Start = parseInt(o2.range.split('-')[0]);
-				return o1Start - o2Start;
-			});
-		let chapterReviews;
-		if (chapterHighlights && chapterHighlights.length > 0 && reviews) {
-			chapterReviews = reviews
-				.filter((review) => chapterUid == review.chapterUid && review.type == 1)
+		// Only include chapters that are in our inclusion set or if showEmptyChapterTitle is on
+		if (chaptersToInclude.has(chapterUid) || showEmptyChapterTitleToggle) {
+			// find highlights by chapterUid
+			const chapterHighlights = highlights
+				.filter((highlight) => highlight.chapterUid == chapterUid)
 				.sort((o1, o2) => {
-					if (o1.range === undefined && o2.range === undefined) {
-						return 0;
-					} else if (o1.range === undefined) {
-						return 1;
-					} else if (o2.range === undefined) {
-						return -1;
-					} else {
-						const o1Start = parseInt(o1.range.split('-')[0]);
-						const o2Start = parseInt(o2.range.split('-')[0]);
-						return o1Start - o2Start;
-					}
+					const o1Start = parseInt(o1.range.split('-')[0]);
+					const o2Start = parseInt(o2.range.split('-')[0]);
+					return o1Start - o2Start;
 				});
-		}
 
-		const showEmptyChapterTitleToggle = get(settingsStore).showEmptyChapterTitleToggle;
-		// if showEmptyChapterTitle is true, will set chapter even there is no highlight in this chapter
-		if ((chapterHighlights && chapterHighlights.length > 0) || showEmptyChapterTitleToggle) {
+			let chapterReviews;
+			if (reviews) {
+				chapterReviews = reviews
+					.filter((review) => chapterUid == review.chapterUid && review.type == 1)
+					.sort((o1, o2) => {
+						if (o1.range === undefined && o2.range === undefined) {
+							return 0;
+						} else if (o1.range === undefined) {
+							return 1;
+						} else if (o2.range === undefined) {
+							return -1;
+						} else {
+							const o1Start = parseInt(o1.range.split('-')[0]);
+							const o2Start = parseInt(o2.range.split('-')[0]);
+							return o1Start - o2Start;
+						}
+					});
+			}
+
 			chapterResult.push({
 				chapterUid: chapterUid,
 				chapterIdx: chapterIdx,
