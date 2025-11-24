@@ -142,6 +142,7 @@ export const parseArticleHighlightReview = (
 		if (chapterHighlights && chapterHighlights.length > 0) {
 			chapterResult.push({
 				chapterTitle: chapterTitle,
+				chapterUrl: chapter.url,
 				level: chapter.level,
 				isMPChapter: chapter.isMPChapter,
 				chapterReviews: chapterReviews,
@@ -270,6 +271,7 @@ export const parseChapterResp = (
 				refMpReviewId: mpInfo.reviewId,
 				updateTime: mpInfo.createTime,
 				title: mpInfo.title,
+				url: getArticleUrl(mpInfo.reviewId),
 				isMPChapter: 1,
 				level: 2
 			};
@@ -437,4 +439,9 @@ const getPcUrl = (bookId: string): string => {
 	strSub += CryptoJS.MD5(strSub).toString(CryptoJS.enc.Hex).substr(0, 3);
 	const prefix = 'https://weread.qq.com/web/reader/';
 	return prefix + strSub;
+};
+
+const getArticleUrl = (reviewId: string): string => {
+	const prefix = 'https://weread.qq.com/web/reader/';
+	return prefix + reviewId;
 };

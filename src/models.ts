@@ -317,6 +317,7 @@ export type Chapter = {
 	title: string;
 	isMPChapter: number;
 	refMpReviewId?: string;
+	url?: string;
 	level: number;
 };
 
@@ -410,6 +411,7 @@ export type ChapterHighlightReview = {
 	chapterUid?: number;
 	chapterIdx?: number;
 	chapterTitle: string;
+	chapterUrl?: string;
 	level: number;
 	isMPChapter: number;
 	// highlight and review can be empty, just output title

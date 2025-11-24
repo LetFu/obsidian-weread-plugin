@@ -16,7 +16,7 @@ lastReadDate: {{metaData.lastReadDate}}
 
 # 高亮划线
 {% for chapter in chapterHighlights %}
-{% if chapter.level == 1 %}## {{chapter.chapterTitle}}{% elif chapter.level == 2 %}### {{chapter.chapterTitle}}{% elif chapter.level == 3 %}#### {{chapter.chapterTitle}}{% endif %}
+{% if chapter.chapterUrl %}{% if chapter.level == 1 %}## [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% elif chapter.level == 2 %}### [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% elif chapter.level == 3 %}#### [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% endif %}{% else %}{% if chapter.level == 1 %}## {{chapter.chapterTitle}}{% elif chapter.level == 2 %}### {{chapter.chapterTitle}}{% elif chapter.level == 3 %}#### {{chapter.chapterTitle}}{% endif %}{% endif %}
 {% for highlight in chapter.highlights %}{% if highlight.reviewContent %}
 > 📌 {{ highlight.markText |trim }} ^{{highlight.bookmarkId}}
 - 💭 {{highlight.reviewContent}} - ⏱ {{highlight.createTime}} {% else %}

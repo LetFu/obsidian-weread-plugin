@@ -10,7 +10,7 @@ lastReadDate: {{metaData.lastReadDate}}
 {{bookReview.createTime}}
 {{bookReview.mdContent}}{% endfor%}{% endif %}
 {% for chapter in chapterHighlights %}
-{% if chapter.level == 1 %}## ◆ {{chapter.chapterTitle}}{% elif chapter.level == 2 %}### ◆ {{chapter.chapterTitle}}{% elif chapter.level == 3 %}#### ◆ {{chapter.chapterTitle}}{% endif %}
+{% if chapter.chapterUrl %}{% if chapter.level == 1 %}## ◆ [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% elif chapter.level == 2 %}### ◆ [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% elif chapter.level == 3 %}#### ◆ [{{chapter.chapterTitle}}]({{chapter.chapterUrl}}){% endif %}{% else %}{% if chapter.level == 1 %}## ◆ {{chapter.chapterTitle}}{% elif chapter.level == 2 %}### ◆ {{chapter.chapterTitle}}{% elif chapter.level == 3 %}#### ◆ {{chapter.chapterTitle}}{% endif %}{% endif %}
 {% for highlight in chapter.highlights %}{% if highlight.reviewContent %}
 
 {{highlight.createTime}} 发表想法
